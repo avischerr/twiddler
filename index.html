@@ -18,16 +18,6 @@
         padding: 10px 20px 10px 20px;
       }
 
-      /* .decoration {
-        background: linear-gradient(#e3f5fc, #2989f7);
-        width: 10px;
-        float: left;
-        height: 100%;
-        display: block;
-        position: fixed;
-        padding: 10px;
-      } */
-
       div {
         color: #2989f7;
       }
@@ -96,9 +86,6 @@
         var $body = $('body');
         $body.html('<h1> Twiddler </h1>');
 
-        // $body.append('<div class="decoration"> </div>')
-
-        // creates new tweets button
         var $buttonDiv = $('<div class="button-div"></div>')
         var $button = $('<button>See What\'s New</button>')
         $button.appendTo($buttonDiv);
@@ -107,7 +94,6 @@
         var $bodyContainer = $('<div class="bodyContainer"></div>');
         $body.append($bodyContainer)
 
-        // pulls in new tweets for homepage
         var newTweets = function () {
           var index = streams.home.length - 1;
           while(index >= 0){
@@ -132,21 +118,17 @@
           }
         };
 
-        // tells button to call newTweets function
         $('body').on('click', '.button-div', function (event) {
           event.preventDefault();
           newTweets();
         })
 
-        // creates timelineContainer
         var $timelineContainer = $('<div class="timelineContainer"></div>');
         $timelineContainer.appendTo($bodyContainer);
 
-        // creates a user timeline for each user's tweets
         var userTweets = function (user) {
-          // clears div for next username clicked
           $(".timelineContainer").empty()
-          // iterates over each username
+
           for (var username in streams.users) {
             if (username === user) {
               $userTimelineContainer = $('<div class="userTimelineContainer"></div>');
@@ -155,7 +137,6 @@
               var userArray = streams.users[username];
               var tweetIndex = userArray.length - 1;
 
-              // populates each tweet from username's tweet array
               while (tweetIndex >= 0) {
                 var tweet = userArray[tweetIndex];
                 var $tweetContainer = $('<div class = "userTweetContainer"></div>');
@@ -180,7 +161,6 @@
           }
         };
 
-        // clicking user container runs userTweets for that username
         $('body').on('click', '.userContainer', function(event) {
           var user = event.target.classList[1];
           userTweets(user);
