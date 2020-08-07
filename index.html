@@ -3,25 +3,193 @@
   <head>
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
+
+    <style>
+      body {
+        font-family: Arial;
+      }
+
+      h1 {
+        color: #2989f7;
+        display: block;
+        font-size: 46px;
+        background: linear-gradient(white, #e3f5fc);
+        border-bottom: 5px solid #2989f7;
+        padding: 10px 20px 10px 20px;
+      }
+
+      /* .decoration {
+        background: linear-gradient(#e3f5fc, #2989f7);
+        width: 10px;
+        float: left;
+        height: 100%;
+        display: block;
+        position: fixed;
+        padding: 10px;
+      } */
+
+      div {
+        color: #2989f7;
+      }
+
+      .tweet {
+        color: #2989f7;
+        font-size: 32px;
+        padding: 4px;
+      }
+
+      .tweetContainer {
+        background-color: #e3f5fc;
+        margin: 10px;
+        padding: 8px;
+        margin-left: 15px;
+        display: block;
+        width: 60%;
+        float: left;
+      }
+
+      .userContainer {
+        background-color: #2989f7;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 4px;
+      }
+
+      .timeContainer {
+        color: #95a8be;
+        font-size: 12px;
+        padding-left: 4px;
+      }
+
+      .timelineContainer {
+        width: 30%;
+        float: right;
+        margin: 0 1.5%;
+        background-color: #e3f5fc;
+        border-radius: 5px;
+      }
+
+      .userTimelineContainer {
+        border: 10px solid #2989f7;
+      }
+
+      button {
+        color:white;
+        font-family: Arial;
+        font-weight: bold;
+        font-size: 18px;
+        background:#2989f7;
+        padding: 10px;
+        margin: 0px 10px 10px 10px;
+        border: 8px solid #2989f7;
+        border-radius: 10px;
+      }
+      
+    </style>
   </head>
   <body>
+
     <script>
 
       $(document).ready(function(){
         var $body = $('body');
-        $body.html('');
+        $body.html('<h1> Twiddler </h1>');
 
-        var index = streams.home.length - 1;
-        while(index >= 0){
-          var tweet = streams.home[index];
-          var $tweet = $('<div></div>');
-          $tweet.text('@' + tweet.user + ': ' + tweet.message);
-          $tweet.appendTo($body);
-          index -= 1;
-        }
+        // $body.append('<div class="decoration"> </div>')
 
+        // creates new tweets button
+        var $buttonDiv = $('<div class="button-div"></div>')
+        var $button = $('<button>See What\'s New</button>')
+        $button.appendTo($buttonDiv);
+        $buttonDiv.appendTo($body);
+
+        var $bodyContainer = $('<div class="bodyContainer"></div>');
+        $body.append($bodyContainer)
+
+        // pulls in new tweets for homepage
+        var newTweets = function () {
+          var index = streams.home.length - 1;
+          while(index >= 0){
+            var tweet = streams.home[index];
+            var $tweetContainer = $('<div class = "tweetContainer"></div>');
+            $tweetContainer.appendTo($bodyContainer);
+            
+            var $user = $('<div class="userContainer"></div>');
+            $user.appendTo($tweetContainer)
+            $user.text('@ ' + tweet.user + ': ');
+            $user.addClass(tweet.user);
+
+            var $tweet = $('<div class="tweet"></div>');
+            $tweet.appendTo($tweetContainer)
+            $tweet.text(tweet.message);
+
+            var $timestamp = $('<div class="timeContainer"></div>');
+            $timestamp.appendTo($tweetContainer)
+            $timestamp.text(tweet.created_at);
+            
+            index -= 1;
+          }
+        };
+
+        // tells button to call newTweets function
+        $('body').on('click', '.button-div', function (event) {
+          event.preventDefault();
+          newTweets();
+        })
+
+        // creates timelineContainer
+        var $timelineContainer = $('<div class="timelineContainer"></div>');
+        $timelineContainer.appendTo($bodyContainer);
+
+        // creates a user timeline for each user's tweets
+        var userTweets = function (user) {
+          // clears div for next username clicked
+          $(".timelineContainer").empty()
+          // iterates over each username
+          for (var username in streams.users) {
+            if (username === user) {
+              $userTimelineContainer = $('<div class="userTimelineContainer"></div>');
+              $timelineContainer.append($userTimelineContainer);
+
+              var userArray = streams.users[username];
+              var tweetIndex = userArray.length - 1;
+
+              // populates each tweet from username's tweet array
+              while (tweetIndex >= 0) {
+                var tweet = userArray[tweetIndex];
+                var $tweetContainer = $('<div class = "userTweetContainer"></div>');
+                $tweetContainer.appendTo($userTimelineContainer);
+
+                var $user = $('<div class="userContainer"></div>');
+                $user.appendTo($tweetContainer);
+                $user.text('@ ' + tweet.user + ': ');
+
+                var $tweet = $('<div class="tweet"></div>');
+                $tweet.appendTo($tweetContainer);
+                $tweet.text(tweet.message);
+
+                var $timestamp = $('<div class="timeContainer"></div>');
+                $timestamp.appendTo($tweetContainer);
+                $timestamp.text(tweet.created_at);
+
+                tweetIndex -= 1;
+
+              }
+            }
+          }
+        };
+
+        // clicking user container runs userTweets for that username
+        $('body').on('click', '.userContainer', function(event) {
+          var user = event.target.classList[1];
+          userTweets(user);
+        })
+
+        newTweets();
       });
 
     </script>
+
   </body>
 </html>
