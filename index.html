@@ -34,8 +34,13 @@
         padding: 8px;
         margin-left: 15px;
         display: block;
+        width: 100%;
+      }
+
+      .feedContainer {
+        display: block;
         width: 60%;
-        float: left;
+        float:left;
       }
 
       .userContainer {
@@ -94,14 +99,17 @@
         var $bodyContainer = $('<div class="bodyContainer"></div>');
         $body.append($bodyContainer)
 
+        var $feedContainer = $('<div class="feedContainer"></div>');
+        $bodyContainer.append($feedContainer)
+
         var newTweets = function () {
-          $(".bodyContainer").empty()
+          $(".feedContainer").empty()
 
           var index = streams.home.length - 1;
           while(index >= 0){
             var tweet = streams.home[index];
             var $tweetContainer = $('<div class = "tweetContainer"></div>');
-            $tweetContainer.appendTo($bodyContainer);
+            $tweetContainer.appendTo($feedContainer);
             
             var $user = $('<div class="userContainer"></div>');
             $user.appendTo($tweetContainer)
